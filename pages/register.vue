@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import CryptoJS from 'crypto-js'
+
 export default {
   layout: 'blank',
   data () {
@@ -121,7 +123,23 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-
+          this.$axios.post('/user/signup', {
+            username: this.ruleForm.name,
+            password: CryptoJS.MD5(this.ruleForm.pwd).toString(),
+            email: this.ruleForm.email,
+            code: this.ruleForm.code
+          }).then(({ data }) => {
+            if (data && data.code === 0) {
+              location.href = '/login'
+            } else {
+              this.error = data.msg
+            }
+          }).catch((error) => {
+            this.error = `服务器出错，错误码：${error.response.status}`
+            setTimeout(() => {
+              this.error = ''
+            }, 1500)
+          })
         }
       })
     },
