@@ -9,6 +9,7 @@ const Redis = require('koa-redis')
 const dbConfig = require('./config')
 const passport = require('./interface/utils/passport')
 const user = require('./interface/user')
+const geo = require('./interface/geo')
 
 mongoose.connect(dbConfig.dburl, {
   useNewUrlParser: true
@@ -28,6 +29,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(user.routes()).use(user.allowedMethods())
+app.use(geo.routes()).use(geo.allowedMethods())
 
 // Import and Set Nuxt.js options
 const config = require('../nuxt.config.js')
