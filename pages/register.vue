@@ -81,7 +81,42 @@ export default {
   },
   methods: {
     sendMsg () {
-
+      let nameErr
+      let emailErr
+      if (this.timerid) {
+        return false
+      }
+      this.$refs.ruleForm.validateField('name', (error) => {
+        nameErr = error
+      })
+      this.statusMsg = ''
+      if (nameErr) {
+        return false
+      }
+      this.$refs.ruleForm.validateField('email', (error) => {
+        emailErr = error
+      })
+      if (!nameErr && !emailErr) {
+        this.$axios.post('/user/verify', {
+          username: this.ruleForm.name,
+          email: this.ruleForm.email
+        }).then(({ data }) => {
+          if (data.code === 0) {
+            let count = 60
+            this.statusMsg = `验证码已发送，剩余${count}秒`
+            this.timerid = setInterval(() => {
+              count--
+              this.statusMsg = `验证码已发送，剩余${count}秒`
+              if (count === 0) {
+                clearInterval(this.timerid)
+                this.timerid = null
+              }
+            }, 1000)
+          } else {
+            this.statusMsg = data.msg
+          }
+        })
+      }
     },
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
