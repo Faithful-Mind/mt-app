@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 
 const Menu = require('../dbs/models/menu')
+const Province = require('../dbs/models/province')
 const axios = require('./utils/axios')
 
 const router = new Router({ prefix: '/geo' })
@@ -19,6 +20,24 @@ router.get('/getPosition', async (ctx) => {
       city: ''
     }
   }
+})
+
+router.get('/province', async (ctx) => {
+  const province = await Province.find()
+  ctx.body = {
+    province: province.map((item) => {
+      return {
+        id: item.id,
+        name: item.value
+      }
+    })
+  }
+  // const { status, data: { province } } = await axios.get('http://cp-tools.cn/geo/province')
+  // ctx.body = {
+  //   province: status === 200
+  //     ? province
+  //     : []
+  // }
 })
 
 router.get('/menu', async (ctx) => {
