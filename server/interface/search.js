@@ -40,4 +40,34 @@ router.get('/top', async (ctx) => {
   // }
 })
 
+router.get('/hotPlace', async (ctx) => {
+  const city = ctx.store ? ctx.store.geo.position.city : ctx.query.city
+  try {
+    let result = await Poi.find({
+      city
+      // type: ctx.query.type || '景点'
+    }).limit(10)
+    if (!result.length) {
+      result = (await axios
+        .get('http://cp-tools.cn/search/hotPlace', { params: { city } })
+      ).data.result
+    }
+
+    ctx.body = {
+      code: 0,
+      result: result.map((item) => {
+        return {
+          name: item.name,
+          type: item.type
+        }
+      })
+    }
+  } catch (e) {
+    ctx.body = {
+      code: -1,
+      result: []
+    }
+  }
+})
+
 module.exports = router

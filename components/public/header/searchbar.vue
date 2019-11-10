@@ -19,18 +19,18 @@
           <button class="el-button el-button--primary"><i class="el-icon-search" /></button>
           <dl v-if="isHotPlace" class="hotPlace">
             <dt>热门搜索</dt>
-            <dd v-for="(item, idx) in hotPlace" :key="idx">{{ item }}</dd>
+            <dd v-for="(item, idx) in $store.state.home.hotPlace.slice(0, 5)" :key="idx">
+              {{ item.name }}
+            </dd>
           </dl>
           <dl v-if="isSearchList" class="searchList">
             <dd v-for="(item, idx) in searchList" :key="idx">{{ item.name }}</dd>
           </dl>
         </div>
         <p class="suggest">
-          <a id="" href="#">故宫博物院</a>
-          <a id="" href="#">故宫博物院</a>
-          <a id="" href="#">故宫博物院</a>
-          <a id="" href="#">故宫博物院</a>
-          <a id="" href="#">故宫博物院</a>
+          <a v-for="(item, idx) in $store.state.home.hotPlace.slice(0, 5)" :key="idx" href="#">
+            {{ item.name }}
+          </a>
         </p>
         <ul class="nav">
           <li><nuxt-link to="/" class="takeout">美团外卖</nuxt-link></li>
@@ -59,7 +59,7 @@ export default {
     return {
       search: '',
       isFocus: false,
-      hotPlace: ['火锅', '火锅', '火锅'],
+      hotPlace: [],
       searchList: []
     }
   },
