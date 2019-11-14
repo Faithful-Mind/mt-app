@@ -11,6 +11,7 @@ const passport = require('./interface/utils/passport')
 const user = require('./interface/user')
 const geo = require('./interface/geo')
 const search = require('./interface/search')
+const category = require('./interface/category')
 
 mongoose.connect(dbConfig.dburl, {
   useNewUrlParser: true
@@ -32,6 +33,7 @@ app.use(passport.session())
 app.use(user.routes()).use(user.allowedMethods())
 app.use(geo.routes()).use(geo.allowedMethods())
 app.use(search.routes()).use(search.allowedMethods())
+app.use(category.routes()).use(category.allowedMethods())
 
 // Import and Set Nuxt.js options
 const config = require('../nuxt.config.js')
